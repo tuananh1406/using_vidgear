@@ -8,7 +8,7 @@ from vidgear.gears import CamGear, WriteGear
 stream = CamGear(source=0).start()
 
 # Define writer with default parameters and suitable output filename for e.g. `Output.mp4`
-writer = WriteGear(output="Output.mp4")
+writer = WriteGear(output="Output.mp4", logging=True)
 now = datetime.now()
 print("Start time: ", now)
 
