@@ -2,7 +2,6 @@
 from datetime import datetime
 
 import cv2
-
 from vidgear.gears import CamGear, WriteGear
 
 # open any valid video stream(for e.g `myvideo.avi` file)
@@ -11,6 +10,7 @@ stream = CamGear(source=0).start()
 # Define writer with default parameters and suitable output filename for e.g. `Output.mp4`
 writer = WriteGear(output="Output.mp4")
 now = datetime.now()
+print("Start time: ", now)
 
 # loop over
 while True:
@@ -26,6 +26,7 @@ while True:
     # write frame to writer
     writer.write(frame)
     if (datetime.now() - now).seconds > 5:
+        print("5 seconds passed")
         break
 
     # Show output window
