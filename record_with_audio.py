@@ -36,6 +36,7 @@ class Recorder:
         )  # video formats and sizes also depend and vary according to the camera used
         self.video_filename = f"temp_{name}.avi"
         self.audio_filename = f"temp_{name}.wav"
+        self.clean()
         self.out_filename = f"{name}.avi"
         self.video_cap = cv2.VideoCapture(self.device_index)
         self.video_writer = cv2.VideoWriter_fourcc(*self.fourcc)
@@ -99,8 +100,10 @@ class Recorder:
         "Audio starts being recorded"
         self.stream.start_stream()
         while self.open:
-            data = self.stream.read(self.frames_per_buffer)
-            self.audio_frames.append(data)
+            try:
+                self.audio_frames.append(self.stream.read(self.frames_per_buffer))
+            except Exception as e:
+                print(f"An exception occurred: {e}")
             if not self.open:
                 break
 
