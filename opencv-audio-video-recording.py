@@ -1,6 +1,3 @@
-# pip install opencv-python numpy pyaudio
-
-
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # VideoRecorder.py
@@ -14,7 +11,6 @@ import time
 import wave
 
 import cv2
-import numpy as np
 import pyaudio
 
 
@@ -52,8 +48,6 @@ class VideoRecorder:
     def record(self):
         "Video starts being recorded"
         # counter = 1
-        timer_start = time.time()
-        timer_current = 0
         while self.open:
             ret, video_frame = self.video_cap.read()
             if ret:
@@ -161,9 +155,6 @@ def stop_AVrecording(filename="test"):
     frame_counts = video_thread.frame_counts
     elapsed_time = time.time() - video_thread.start_time
     recorded_fps = frame_counts / elapsed_time
-    print("total frames " + str(frame_counts))
-    print("elapsed time " + str(elapsed_time))
-    print("recorded fps " + str(recorded_fps))
     video_thread.stop()
 
     # Makes sure the threads have finished
