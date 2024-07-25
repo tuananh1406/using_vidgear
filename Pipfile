@@ -11,6 +11,7 @@ uvloop = "*"
 vidgear = "*"
 setuptools = "*"
 pyzmq = "*"
+pyaudio = "*"
 
 [dev-packages]
 
