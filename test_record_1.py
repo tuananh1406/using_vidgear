@@ -1,5 +1,6 @@
 import os
 import time
+from datetime import datetime
 
 import cv2
 
@@ -13,6 +14,7 @@ prev_frame_time = 0
 
 # used to record the time at which we processed current frame
 new_frame_time = 0
+now = datetime.now()
 
 
 # Set resolution for the video capture
@@ -98,9 +100,11 @@ while True:
     cv2.putText(frame, fps, (7, 70), font, 3, (100, 255, 0), 3, cv2.LINE_AA)
 
     out.write(frame)
-    cv2.imshow("frame", frame)
-    if cv2.waitKey(1) & 0xFF == ord("q"):
+    if (datetime.now() - now).seconds > 10:
         break
+    # cv2.imshow("frame", frame)
+    # if cv2.waitKey(1) & 0xFF == ord("q"):
+    #     break
 
 
 cap.release()
