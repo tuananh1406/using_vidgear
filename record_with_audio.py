@@ -46,7 +46,7 @@ class Recorder:
             self.video_filename, self.video_writer, self.fps, self.frameSize
         )
         self.frame_counts = 1
-        self.start_time = datetime.now()
+        self.start_time = time.time()
         self.open = True
         self.rate = rate
         self.frames_per_buffer = fpb
