@@ -4,11 +4,11 @@ import threading
 import time
 import wave
 
-# import time
-# from datetime import datetime
-
 import cv2
 import pyaudio
+
+# import time
+# from datetime import datetime
 
 
 class Recorder:
@@ -117,6 +117,9 @@ class Recorder:
         self.stop()
         elapsed_time = time.time() - self.start_time
         recorded_fps = self.frame_counts / elapsed_time
+
+        if os.path.exists(self.out_filename):
+            os.remove(self.out_filename)
 
         # Makes sure the threads have finished
         while threading.active_count() > 1:
