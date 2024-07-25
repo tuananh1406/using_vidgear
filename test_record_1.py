@@ -8,7 +8,7 @@ import cv2
 
 filename = "video.mp4"
 out_fps = 30
-res = "1080p"
+res = "720p"
 # used to record the time when we processed last frame
 prev_frame_time = 0
 
