@@ -6,7 +6,7 @@ import cv2
 
 # import numpy as np
 
-filename = "video.mp4"
+filename = "video.avi"
 out_fps = 30
 res = "720p"
 # used to record the time when we processed last frame
@@ -74,7 +74,8 @@ cap = cv2.VideoCapture(0)
 cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
 out = cv2.VideoWriter(
     filename,
-    get_video_type(filename),
+    # get_video_type(filename),
+    cv2.VideoWriter_fourcc(*"MJPG"),
     30,
     get_dims(cap, res)
     # filename, get_video_type(filename), get_fps(res), get_dims(cap, res)
