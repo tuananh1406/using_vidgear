@@ -57,7 +57,8 @@ def get_fps(res="1080p"):
 # Types of Codes: http://www.fourcc.org/codecs.php
 VIDEO_TYPE = {
     "avi": cv2.VideoWriter_fourcc(*"XVID"),
-    "mp4": cv2.VideoWriter_fourcc(*"H264"),
+    "mp4": cv2.VideoWriter_fourcc(*"MJPG"),
+    # "mp4": cv2.VideoWriter_fourcc(*"H264"),
     # "mp4": cv2.VideoWriter_fourcc(*"XVID"),
 }
 
