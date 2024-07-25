@@ -214,6 +214,6 @@ def file_manager(filename="test"):
 
 if __name__ == "__main__":
     start_AVrecording()
-    time.sleep(5)
+    time.sleep(60)
     stop_AVrecording()
     file_manager()
