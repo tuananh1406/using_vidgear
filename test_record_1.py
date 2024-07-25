@@ -5,8 +5,7 @@ import cv2
 
 # import numpy as np
 
-filename = "video.avi"
-frames_per_second = 24.0
+filename = "video.mp4"
 out_fps = 30
 res = "720p"
 # used to record the time when we processed last frame
@@ -30,6 +29,12 @@ STD_DIMENSIONS = {
     "1080p": (1920, 1080),
     "4k": (3840, 2160),
 }
+STD_FPS = {
+    "480p": 30,
+    "720p": 10,
+    "1080p": 5,
+    "4k": 5,
+}
 
 
 # grab resolution dimensions and set video capture to it.
@@ -43,12 +48,17 @@ def get_dims(cap, res="1080p"):
     return width, height
 
 
+# grab resolution dimensions and set video capture to it.
+def get_fps(res="1080p"):
+    return STD_FPS[res] if res in STD_FPS else STD_FPS["480p"]
+
+
 # Video Encoding, might require additional installs
 # Types of Codes: http://www.fourcc.org/codecs.php
 VIDEO_TYPE = {
     "avi": cv2.VideoWriter_fourcc(*"XVID"),
-    # "mp4": cv2.VideoWriter_fourcc(*"H264"),
-    "mp4": cv2.VideoWriter_fourcc(*"XVID"),
+    "mp4": cv2.VideoWriter_fourcc(*"H264"),
+    # "mp4": cv2.VideoWriter_fourcc(*"XVID"),
 }
 
 
@@ -58,7 +68,13 @@ def get_video_type(filename):
 
 
 cap = cv2.VideoCapture(0)
-out = cv2.VideoWriter(filename, get_video_type(filename), out_fps, get_dims(cap, res))
+out = cv2.VideoWriter(
+    filename,
+    get_video_type(filename),
+    30,
+    get_dims(cap, res)
+    # filename, get_video_type(filename), get_fps(res), get_dims(cap, res)
+)
 # font which we will be using to display FPS
 font = cv2.FONT_HERSHEY_SIMPLEX
 
