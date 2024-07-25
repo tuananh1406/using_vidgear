@@ -96,6 +96,7 @@ while True:
     # converting the fps to string so that we can display it on frame
     # by using putText function
     fps = str(fps)
+    print(fps)
 
     # putting the FPS count on the frame
     cv2.putText(frame, fps, (7, 70), font, 3, (100, 255, 0), 3, cv2.LINE_AA)
