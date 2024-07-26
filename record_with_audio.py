@@ -19,7 +19,7 @@ class Recorder:
         sizex=640,
         sizey=480,
         camindex=0,
-        fps=30,
+        fps=7,
         rate=44100,
         fpb=1024,
         channels=2,
@@ -37,7 +37,7 @@ class Recorder:
         self.video_filename = f"temp_{name}.avi"
         self.audio_filename = f"temp_{name}.wav"
         self.clean()
-        self.out_filename = f"{name}.avi"
+        self.out_filename = f"{name}.mp4"
         self.video_cap = cv2.VideoCapture(self.device_index)
         self.video_writer = cv2.VideoWriter_fourcc(*self.fourcc)
         self.video_cap.set(cv2.CAP_PROP_FOURCC, self.video_writer)
