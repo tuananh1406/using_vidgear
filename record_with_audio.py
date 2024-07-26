@@ -3,6 +3,7 @@ import subprocess
 import threading
 import time
 import wave
+from datetime import datetime
 
 import cv2
 import pyaudio
@@ -177,7 +178,11 @@ class Recorder:
 
 
 if __name__ == "__main__":
-    rec = Recorder(sizex=1920, sizey=1080, fps=30, name="pc-lan")
+    if not os.path.exists("videos"):
+        os.makedirs("videos")
+    time_format = "%Y-%m-%d_%H-%M-%S"
+    filename = f"videos/{datetime.now().strftime(time_format)}.mp4"
+    rec = Recorder(sizex=1920, sizey=1080, fps=30, name=filename)
     rec.start()
     time.sleep(30)
     rec.stop_AVrecording()
