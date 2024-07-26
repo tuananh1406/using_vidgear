@@ -30,7 +30,7 @@ class Recorder:
             fps  # fps should be the minimum constant rate at which the camera can
         )
         self.fourcc = fourcc  # capture images (with no decrease in speed over time; testing is required)
-        self.frameSize = (
+        self.frame_size = (
             sizex,
             sizey,
         )  # video formats and sizes also depend and vary according to the camera used
@@ -44,7 +44,7 @@ class Recorder:
         self.video_cap.set(3, sizex)
         self.video_cap.set(4, sizey)
         self.video_out = cv2.VideoWriter(
-            self.video_filename, self.video_writer, self.fps, self.frameSize
+            self.video_filename, self.video_writer, self.fps, self.frame_size
         )
         self.frame_counts = 1
         self.start_time = time.time()
@@ -78,7 +78,7 @@ class Recorder:
             if ret:
                 cv2.putText(
                     video_frame,
-                    f"{self.sizex}x{self.sizey} - {fps}",
+                    f"{self.frame_size[0]}x{self.frame_size[1]} - {fps}",
                     (7, 70),
                     font,
                     3,
