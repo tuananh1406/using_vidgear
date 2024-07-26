@@ -130,11 +130,11 @@ class Recorder:
 
         # Merging audio and video signal
         if (
-            abs(recorded_fps - 6) >= 0.01
+            abs(recorded_fps - self.fps) >= 0.01
         ):  # If the fps rate was higher/lower than expected, re-encode it to the expected
-            cmd = f"ffmpeg -r {recorded_fps} -i {self.video_filename} -pix_fmt yuv420p -r 6 {self.video_filename}"
+            cmd = f"ffmpeg -r {recorded_fps} -i {self.video_filename} -pix_fmt mjpg -r {self.fps} {self.video_filename}"
             self.call_cmd(cmd)
-        cmd = f"ffmpeg -y -ac 2 -channel_layout stereo -i {self.audio_filename} -i {self.video_filename} -pix_fmt yuv420p {self.out_filename}"
+        cmd = f"ffmpeg -y -ac 2 -channel_layout stereo -i {self.audio_filename} -i {self.video_filename} -pix_fmt mjpg {self.out_filename}"
         self.call_cmd(cmd)
         self.clean()
 
