@@ -120,10 +120,6 @@ class Recorder:
 
     def record_audio_stream(self):
         with wave.open(self.audio_filename, "wb") as waveFile:
-            waveFile.setnchannels(self.channels)
-            waveFile.setsampwidth(self.audio.get_sample_size(self.format))
-            waveFile.setframerate(self.rate)
-
             audio = pyaudio.PyAudio()
             stream = audio.open(
                 format=self.format,
@@ -132,7 +128,12 @@ class Recorder:
                 input=True,
                 frames_per_buffer=self.frames_per_buffer,
             )
-            self.audio_frames = []
+
+            waveFile.setnchannels(self.channels)
+            waveFile.setsampwidth(audio.get_sample_size(self.format))
+            waveFile.setframerate(self.rate)
+
+            # self.audio_frames = []
 
             while self.open:
                 try:
