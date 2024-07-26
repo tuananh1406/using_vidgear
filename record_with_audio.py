@@ -53,15 +53,6 @@ class Recorder:
         self.frames_per_buffer = fpb
         self.channels = channels
         self.format = pyaudio.paInt16
-        self.audio = pyaudio.PyAudio()
-        self.stream = self.audio.open(
-            format=self.format,
-            channels=self.channels,
-            rate=self.rate,
-            input=True,
-            frames_per_buffer=self.frames_per_buffer,
-        )
-        self.audio_frames = []
 
     def record_video(self):
         "Video starts being recorded"
@@ -93,15 +84,18 @@ class Recorder:
                 # cv2.waitKey(1)
             else:
                 break
+        self.video_out.release()
+        self.video_cap.release()
+        cv2.destroyAllWindows()
 
     def stop(self):
         "Finishes the video recording therefore the thread too"
         if self.open:
             self.open = False
 
-            self.video_out.release()
-            self.video_cap.release()
-            cv2.destroyAllWindows()
+            # self.video_out.release()
+            # self.video_cap.release()
+            # cv2.destroyAllWindows()
 
             # self.stream.stop_stream()
             # self.stream.close()
@@ -124,14 +118,41 @@ class Recorder:
             if not self.open:
                 break
 
+    def record_audio_stream(self):
+        with wave.open(self.audio_filename, "wb") as waveFile:
+            waveFile.setnchannels(self.channels)
+            waveFile.setsampwidth(self.audio.get_sample_size(self.format))
+            waveFile.setframerate(self.rate)
+
+            audio = pyaudio.PyAudio()
+            stream = audio.open(
+                format=self.format,
+                channels=self.channels,
+                rate=self.rate,
+                input=True,
+                frames_per_buffer=self.frames_per_buffer,
+            )
+            self.audio_frames = []
+
+            while self.open:
+                try:
+                    waveFile.writeframes(self.stream.read(self.frames_per_buffer))
+                except Exception as e:
+                    print(f"An exception occurred: {e}")
+                if not self.open:
+                    break
+            stream.stop_stream()
+            stream.close()
+            audio.terminate()
+
     def start(self):
         "Launches the video recording function using a thread"
         self.video_thread = threading.Thread(target=self.record_video)
         self.video_thread.start()
 
         "Launches the audio recording function using a thread"
-        # self.audio_thread = threading.Thread(target=self.record_audio)
-        # self.audio_thread.start()
+        self.audio_thread = threading.Thread(target=self.record_audio_stream)
+        self.audio_thread.start()
 
     def stop_AVrecording(self):
         self.stop()
@@ -169,6 +190,6 @@ if __name__ == "__main__":
     rec = Recorder()
     rec.start()
     time.sleep(100)
-    # rec.stop_AVrecording()
-    rec.stop()
+    rec.stop_AVrecording()
+    # rec.stop()
     print("Done")
