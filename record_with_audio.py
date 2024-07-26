@@ -158,7 +158,7 @@ class Recorder:
 
         # Merging audio and video signal
         if (
-            abs(recorded_fps - self.fps) >= 0.01
+            abs(recorded_fps - self.fps) >= 5.0
         ):  # If the fps rate was higher/lower than expected, re-encode it to the expected
             cmd = f"ffmpeg -y -r {recorded_fps} -i {self.video_filename} -input_format mjpeg -pix_fmt yuv420p -r {self.fps} {self.video_filename}"
             self.call_cmd(cmd)
