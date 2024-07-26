@@ -103,15 +103,15 @@ class Recorder:
             self.video_cap.release()
             cv2.destroyAllWindows()
 
-            self.stream.stop_stream()
-            self.stream.close()
-            self.audio.terminate()
-            waveFile = wave.open(self.audio_filename, "wb")
-            waveFile.setnchannels(self.channels)
-            waveFile.setsampwidth(self.audio.get_sample_size(self.format))
-            waveFile.setframerate(self.rate)
-            waveFile.writeframes(b"".join(self.audio_frames))
-            waveFile.close()
+            # self.stream.stop_stream()
+            # self.stream.close()
+            # self.audio.terminate()
+            # waveFile = wave.open(self.audio_filename, "wb")
+            # waveFile.setnchannels(self.channels)
+            # waveFile.setsampwidth(self.audio.get_sample_size(self.format))
+            # waveFile.setframerate(self.rate)
+            # waveFile.writeframes(b"".join(self.audio_frames))
+            # waveFile.close()
 
     def record_audio(self):
         "Audio starts being recorded"
@@ -130,8 +130,8 @@ class Recorder:
         self.video_thread.start()
 
         "Launches the audio recording function using a thread"
-        self.audio_thread = threading.Thread(target=self.record_audio)
-        self.audio_thread.start()
+        # self.audio_thread = threading.Thread(target=self.record_audio)
+        # self.audio_thread.start()
 
     def stop_AVrecording(self):
         self.stop()
@@ -169,5 +169,6 @@ if __name__ == "__main__":
     rec = Recorder()
     rec.start()
     time.sleep(100)
-    rec.stop_AVrecording()
+    # rec.stop_AVrecording()
+    rec.stop()
     print("Done")
