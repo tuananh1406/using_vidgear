@@ -137,7 +137,7 @@ class Recorder:
 
             while self.open:
                 try:
-                    waveFile.writeframes(self.stream.read(self.frames_per_buffer))
+                    waveFile.writeframes(stream.read(self.frames_per_buffer))
                 except Exception as e:
                     print(f"An exception occurred: {e}")
                 if not self.open:
