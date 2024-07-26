@@ -147,6 +147,7 @@ class Recorder:
         self.stop()
         elapsed_time = time.time() - self.start_time
         recorded_fps = self.frame_counts / elapsed_time
+        print(f"Recorded fps: {recorded_fps:.2f}")
 
         if os.path.exists(self.out_filename):
             os.remove(self.out_filename)
@@ -178,6 +179,6 @@ class Recorder:
 if __name__ == "__main__":
     rec = Recorder(sizex=1920, sizey=1080, fps=30, name="pc-lan")
     rec.start()
-    time.sleep(100)
+    time.sleep(30)
     rec.stop_AVrecording()
     print("Done")
