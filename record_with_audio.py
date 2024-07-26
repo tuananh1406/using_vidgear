@@ -36,18 +36,11 @@ class Recorder:
         )  # video formats and sizes also depend and vary according to the camera used
         self.video_filename = f"temp_{name}.avi"
         self.audio_filename = f"temp_{name}.wav"
-        self.clean()
-        self.out_filename = f"{name}.mp4"
-        self.video_cap = cv2.VideoCapture(self.device_index)
-        self.video_writer = cv2.VideoWriter_fourcc(*self.fourcc)
-        self.video_cap.set(cv2.CAP_PROP_FOURCC, self.video_writer)
-        self.video_cap.set(3, sizex)
-        self.video_cap.set(4, sizey)
-        self.video_out = cv2.VideoWriter(
-            self.video_filename, self.video_writer, self.fps, self.frame_size
-        )
+        self.video_writer_fourcc = cv2.VideoWriter_fourcc(*self.fourcc)
         self.frame_counts = 1
         self.start_time = time.time()
+        self.clean()
+        self.out_filename = f"{name}.mp4"
         self.open = True
         self.rate = rate
         self.frames_per_buffer = fpb
@@ -56,11 +49,20 @@ class Recorder:
 
     def record_video(self):
         "Video starts being recorded"
+        video_cap = cv2.VideoCapture(self.device_index)
+        video_cap.set(cv2.CAP_PROP_FOURCC, self.video_writer_fourcc)
+        video_cap.set(3, self.frame_size[0])
+        video_cap.set(4, self.frame_size[1])
+        video_out = cv2.VideoWriter(
+            self.video_filename, self.video_writer_fourcc, self.fps, self.frame_size
+        )
+        self.start_time = time.time()
+
         font = cv2.FONT_HERSHEY_SIMPLEX
         # counter = 1
         prev_frame_time = 0
         while self.open:
-            ret, video_frame = self.video_cap.read()
+            ret, video_frame = video_cap.read()
             new_frame_time = time.time()
             fps = 1 / (new_frame_time - prev_frame_time)
             fps = int(fps)
@@ -77,35 +79,21 @@ class Recorder:
                     3,
                     cv2.LINE_AA,
                 )
-                self.video_out.write(video_frame)
+                video_out.write(video_frame)
                 self.frame_counts += 1
 
                 # cv2.imshow('video_frame', gray)
                 # cv2.waitKey(1)
             else:
                 break
-        self.video_out.release()
-        self.video_cap.release()
+        video_out.release()
+        video_cap.release()
         cv2.destroyAllWindows()
 
     def stop(self):
         "Finishes the video recording therefore the thread too"
         if self.open:
             self.open = False
-
-            # self.video_out.release()
-            # self.video_cap.release()
-            # cv2.destroyAllWindows()
-
-            # self.stream.stop_stream()
-            # self.stream.close()
-            # self.audio.terminate()
-            # waveFile = wave.open(self.audio_filename, "wb")
-            # waveFile.setnchannels(self.channels)
-            # waveFile.setsampwidth(self.audio.get_sample_size(self.format))
-            # waveFile.setframerate(self.rate)
-            # waveFile.writeframes(b"".join(self.audio_frames))
-            # waveFile.close()
 
     def record_audio(self):
         "Audio starts being recorded"
@@ -188,9 +176,8 @@ class Recorder:
 
 
 if __name__ == "__main__":
-    rec = Recorder()
+    rec = Recorder(sizex=1920, sizey=1080, fps=30, name="pc-lan")
     rec.start()
     time.sleep(100)
     rec.stop_AVrecording()
-    # rec.stop()
     print("Done")
