@@ -65,10 +65,27 @@ class Recorder:
 
     def record_video(self):
         "Video starts being recorded"
+        font = cv2.FONT_HERSHEY_SIMPLEX
         # counter = 1
+        prev_frame_time = 0
         while self.open:
             ret, video_frame = self.video_cap.read()
+            new_frame_time = time.time()
+            fps = 1 / (new_frame_time - prev_frame_time)
+            fps = int(fps)
+            fps = str(fps)
+            prev_frame_time = new_frame_time
             if ret:
+                cv2.putText(
+                    video_frame,
+                    f"{self.sizex}x{self.sizey} - {fps}",
+                    (7, 70),
+                    font,
+                    3,
+                    (100, 255, 0),
+                    3,
+                    cv2.LINE_AA,
+                )
                 self.video_out.write(video_frame)
                 self.frame_counts += 1
 
