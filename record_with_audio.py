@@ -151,6 +151,6 @@ class Recorder:
 if __name__ == "__main__":
     rec = Recorder()
     rec.start()
-    time.sleep(10)
+    time.sleep(100)
     rec.stop_AVrecording()
     print("Done")
