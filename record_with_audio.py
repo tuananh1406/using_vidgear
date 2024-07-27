@@ -161,9 +161,15 @@ class Recorder:
             abs(recorded_fps - self.fps) >= 5.0
         ):  # If the fps rate was higher/lower than expected, re-encode it to the expected
             cmd = f"ffmpeg -y -r {recorded_fps} -i {self.video_filename} -input_format {self.fourcc.lower()} -pix_fmt yuv420p -r {self.fps} {self.video_filename}"
-            self.call_cmd(cmd)
+            if os.path.exists(self.video_filename):
+                self.call_cmd(cmd)
+            else:
+                print("Video file was not found")
         cmd = f"ffmpeg -y -ac 2 -channel_layout stereo -i {self.audio_filename} -i {self.video_filename} -input_format {self.fourcc.lower()} -pix_fmt yuv420p {self.out_filename}"
-        self.call_cmd(cmd)
+        if os.path.exists(self.video_filename):
+            self.call_cmd(cmd)
+        else:
+            print("Video file was not found")
         # self.clean()
 
     def call_cmd(self, cmd):
