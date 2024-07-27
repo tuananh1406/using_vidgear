@@ -12,6 +12,18 @@ import pyaudio
 # from datetime import datetime
 
 
+def get_audio_device_id(name="1,0"):
+    p = pyaudio.PyAudio()
+    device_id = None
+    for i in range(p.get_device_count()):
+        dev = p.get_device_info_by_index(i)
+        if name in dev["name"]:
+            device_id = i
+            print(device_id, dev["name"])
+    p.terminate()
+    return device_id
+
+
 class Recorder:
     def __init__(
         self,
@@ -24,6 +36,7 @@ class Recorder:
         rate=44100,
         fpb=1024,
         channels=2,
+        input_device="default",
     ):
         self.open = True
         self.device_index = camindex
@@ -46,6 +59,7 @@ class Recorder:
         self.frames_per_buffer = fpb
         self.channels = channels
         self.format = pyaudio.paInt16
+        self.input_device_index = get_audio_device_id(input_device)
 
     def record_video(self):
         "Video starts being recorded"
@@ -115,6 +129,7 @@ class Recorder:
                 rate=self.rate,
                 input=True,
                 frames_per_buffer=self.frames_per_buffer,
+                input_device_index=self.input_device_index,
             )
 
             waveFile.setnchannels(self.channels)
@@ -192,7 +207,13 @@ if __name__ == "__main__":
     time_format = "%Y-%m-%d_%H-%M-%S"
     filename = f"{datetime.now().strftime(time_format)}"
     rec = Recorder(
-        sizex=640, sizey=480, fps=30, name=filename, camindex=2, fourcc="YV12"
+        sizex=640,
+        sizey=480,
+        fps=30,
+        name=filename,
+        camindex=2,
+        fourcc="YV12",
+        input_device="1,1",
     )
     rec.start()
     time.sleep(30)
