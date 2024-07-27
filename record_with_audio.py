@@ -181,8 +181,8 @@ if __name__ == "__main__":
     if not os.path.exists("videos"):
         os.makedirs("videos")
     time_format = "%Y-%m-%d_%H-%M-%S"
-    filename = f"videos/{datetime.now().strftime(time_format)}.mp4"
-    rec = Recorder(sizex=1920, sizey=1080, fps=30, name=filename)
+    filename = f"videos/{datetime.now().strftime(time_format)}"
+    rec = Recorder(sizex=1920, sizey=1080, fps=30, name=filename, camindex=0)
     rec.start()
     time.sleep(30)
     rec.stop_AVrecording()
