@@ -12,16 +12,17 @@ import pyaudio
 # from datetime import datetime
 
 
-def get_audio_device_id(name="1,0"):
+def get_audio_device_id_and_rate(name="1,0"):
     p = pyaudio.PyAudio()
     device_id = None
     for i in range(p.get_device_count()):
         dev = p.get_device_info_by_index(i)
         if name in dev["name"]:
             device_id = i
+            rate = int(dev["defaultSampleRate"])
             print(device_id, dev["name"])
     p.terminate()
-    return device_id
+    return device_id, rate
 
 
 class Recorder:
@@ -33,7 +34,7 @@ class Recorder:
         sizey=720,
         camindex=0,
         fps=7,
-        rate=44100,
+        # rate=44100,
         fpb=1024,
         channels=2,
         input_device="default",
@@ -55,11 +56,10 @@ class Recorder:
         self.frame_counts = 1
         self.start_time = time.time()
         self.open = True
-        self.rate = rate
         self.frames_per_buffer = fpb
         self.channels = channels
         self.format = pyaudio.paInt16
-        self.input_device_index = get_audio_device_id(input_device)
+        self.input_device_index, self.rate = get_audio_device_id_and_rate(input_device)
 
     def record_video(self):
         "Video starts being recorded"
