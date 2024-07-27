@@ -35,13 +35,12 @@ class Recorder:
             sizex,
             sizey,
         )  # video formats and sizes also depend and vary according to the camera used
-        self.video_filename = f"temp_{name}.avi"
-        self.audio_filename = f"temp_{name}.wav"
+        self.video_filename = os.path.join("raw_videos", f"{name}.avi")
+        self.audio_filename = os.path.join("raw_audios", f"{name}.wav")
+        self.out_filename = os.path.join("final_videos", f"{name}.mp4")
         self.video_writer_fourcc = cv2.VideoWriter_fourcc(*self.fourcc)
         self.frame_counts = 1
         self.start_time = time.time()
-        self.clean()
-        self.out_filename = f"{name}.mp4"
         self.open = True
         self.rate = rate
         self.frames_per_buffer = fpb
@@ -165,7 +164,7 @@ class Recorder:
             self.call_cmd(cmd)
         cmd = f"ffmpeg -y -ac 2 -channel_layout stereo -i {self.audio_filename} -i {self.video_filename} -input_format mjpeg -pix_fmt yuv420p {self.out_filename}"
         self.call_cmd(cmd)
-        self.clean()
+        # self.clean()
 
     def call_cmd(self, cmd):
         subprocess.call(cmd, shell=True)
@@ -178,10 +177,14 @@ class Recorder:
 
 
 if __name__ == "__main__":
-    if not os.path.exists("videos"):
-        os.makedirs("videos")
+    if not os.path.exists("raw_videos"):
+        os.makedirs("raw_videos")
+    if not os.path.exists("raw_audios"):
+        os.makedirs("raw_audios")
+    if not os.path.exists("final_videos"):
+        os.makedirs("final_videos")
     time_format = "%Y-%m-%d_%H-%M-%S"
-    filename = f"videos/{datetime.now().strftime(time_format)}"
+    filename = f"{datetime.now().strftime(time_format)}"
     rec = Recorder(sizex=1920, sizey=1080, fps=30, name=filename, camindex=0)
     rec.start()
     time.sleep(30)
