@@ -46,7 +46,7 @@ class Recorder:
         sizey=720,
         camindex=0,
         fps=7,
-        # rate=44100,
+        rate=44100,
         fpb=1024,
         channels=2,
         input_device="default",
@@ -72,7 +72,7 @@ class Recorder:
         self.format = pyaudio.paInt16
         device_info = get_audio_device_info_by_name(input_device)
         self.input_device_index = device_info["index"]
-        self.rate = int(device_info["defaultSampleRate"])
+        self.rate = rate
         self.channels = (
             channels
             if channels <= device_info["maxInputChannels"]
