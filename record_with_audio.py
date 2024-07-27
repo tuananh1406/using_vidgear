@@ -160,9 +160,9 @@ class Recorder:
         if (
             abs(recorded_fps - self.fps) >= 5.0
         ):  # If the fps rate was higher/lower than expected, re-encode it to the expected
-            cmd = f"ffmpeg -y -r {recorded_fps} -i {self.video_filename} -input_format mjpeg -pix_fmt yuv420p -r {self.fps} {self.video_filename}"
+            cmd = f"ffmpeg -y -r {recorded_fps} -i {self.video_filename} -input_format {self.fourcc.lower()} -pix_fmt yuv420p -r {self.fps} {self.video_filename}"
             self.call_cmd(cmd)
-        cmd = f"ffmpeg -y -ac 2 -channel_layout stereo -i {self.audio_filename} -i {self.video_filename} -input_format mjpeg -pix_fmt yuv420p {self.out_filename}"
+        cmd = f"ffmpeg -y -ac 2 -channel_layout stereo -i {self.audio_filename} -i {self.video_filename} -input_format {self.fourcc.lower()} -pix_fmt yuv420p {self.out_filename}"
         self.call_cmd(cmd)
         # self.clean()
 
@@ -185,7 +185,9 @@ if __name__ == "__main__":
         os.makedirs("final_videos")
     time_format = "%Y-%m-%d_%H-%M-%S"
     filename = f"{datetime.now().strftime(time_format)}"
-    rec = Recorder(sizex=1920, sizey=1080, fps=30, name=filename, camindex=0)
+    rec = Recorder(
+        sizex=640, sizey=480, fps=30, name=filename, camindex=2, fourcc="YV12"
+    )
     rec.start()
     time.sleep(30)
     rec.stop_AVrecording()
