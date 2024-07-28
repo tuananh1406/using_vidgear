@@ -301,7 +301,7 @@ if __name__ == "__main__":
         "vivobook": [(1280, 720), 30],
     }
     time_format = "%Y-%m-%d_%H-%M-%S"
-    time_limit = 60
+    time_limit = 10
     while True:
         filename = f"{datetime.now().strftime(time_format)}"
         rec = Recorder(
