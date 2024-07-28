@@ -45,7 +45,7 @@ class Recorder:
         sizey=720,
         camindex=0,
         fps=7,
-        # rate=44100,
+        rate=44100,
         fpb=1024,
         channels=2,
         input_device="default",
@@ -233,7 +233,7 @@ if __name__ == "__main__":
     machine = sys.argv[1]
     machine_map = {
         "pc-lan": [(1280, 720), 30],
-        "vivobook": [(1280, 720), 7],
+        "vivobook": [(1280, 720), 30],
     }
     time_format = "%Y-%m-%d_%H-%M-%S"
     time_limit = 30
