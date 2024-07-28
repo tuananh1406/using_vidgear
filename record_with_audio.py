@@ -48,7 +48,7 @@ class Recorder:
         rate=44100,
         fpb=1024,
         channels=2,
-        input_device="default",
+        # input_device="default",
         time_limit=10,
     ):
         self.open = True
@@ -130,17 +130,6 @@ class Recorder:
         if self.open:
             self.open = False
 
-    def record_audio(self):
-        "Audio starts being recorded"
-        self.stream.start_stream()
-        while self.open:
-            try:
-                self.audio_frames.append(self.stream.read(self.frames_per_buffer))
-            except Exception as e:
-                print(f"An exception occurred: {e}")
-            if not self.open:
-                break
-
     def record_audio_stream(self):
         with wave.open(self.audio_filename, "wb") as waveFile:
             audio = pyaudio.PyAudio()
@@ -170,7 +159,7 @@ class Recorder:
             stream.close()
             audio.terminate()
 
-    def start(self, time_limit=10):
+    def start(self):
         "Launches the video recording function using a thread"
         print("Recording")
         now = time.time()
@@ -181,7 +170,7 @@ class Recorder:
         self.audio_thread = threading.Thread(target=self.record_audio_stream)
         self.audio_thread.start()
         while True:
-            if time.time() - now > time_limit:
+            if time.time() - now > self.time_limit:
                 self.stop_AVrecording()
                 break
 
