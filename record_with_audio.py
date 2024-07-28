@@ -258,7 +258,8 @@ if __name__ == "__main__":
     machine = sys.argv[1]
     machine_map = {
         "pc-lan": [(1280, 720), 30],
-        "vivobook": [(640, 480), 30],
+        # "vivobook": [(640, 480), 30],
+        "vivobook": [(1280, 720), 30],
     }
     time_format = "%Y-%m-%d_%H-%M-%S"
     time_limit = 30
