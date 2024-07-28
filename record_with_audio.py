@@ -227,7 +227,7 @@ class Recorder:
             self.call_cmd(cmd)
         else:
             print("Video file was not found")
-        # self.clean()
+        self.clean()
 
     def ffmpeg_record_video(self):
         cmd = f"ffmpeg -f v4l2 -input_format mjpeg -framerate {self.fps} -video_size {self.frame_size[0]}x{self.frame_size[1]} -i /dev/video{self.cam_index} -c:v libx264 -vf format=yuvj420p -t {self.time_limit} {self.video_filename}"
@@ -296,7 +296,7 @@ if __name__ == "__main__":
         "vivobook": [(1280, 720), 30],
     }
     time_format = "%Y-%m-%d_%H-%M-%S"
-    time_limit = 30
+    time_limit = 60
     while True:
         filename = f"{datetime.now().strftime(time_format)}"
         rec = Recorder(
