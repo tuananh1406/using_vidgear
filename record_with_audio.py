@@ -40,7 +40,7 @@ class Recorder:
     def __init__(
         self,
         name="video",
-        fourcc="MJPG",
+        fourcc="MJPEG",
         sizex=1280,
         sizey=720,
         cam_index=0,
