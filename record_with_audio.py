@@ -1,5 +1,6 @@
 import os
 import subprocess
+import sys
 import threading
 import time
 import wave
@@ -138,6 +139,10 @@ class Recorder:
             if not self.open:
                 break
 
+    def record_by_ffmpeg(self):
+        cmd = f"ffmpeg -f v4l2 -input_format {self.fourcc.lower()} -framerate {self.fps} -video_size {self.frame_size[0]}x{self.frame_size[1]} -i /dev/video{self.camindex} -c:v libx264 -vf format=yuv420p {self.video_filename}"
+        self.call_cmd(cmd)
+
     def record_audio_stream(self):
         with wave.open(self.audio_filename, "wb") as waveFile:
             audio = pyaudio.PyAudio()
@@ -222,16 +227,21 @@ if __name__ == "__main__":
         os.makedirs("raw_audios")
     if not os.path.exists("final_videos"):
         os.makedirs("final_videos")
+    machine = sys.argv[1]
+    machine_map = {
+        "pc-lan": [(1280, 720), 30],
+        "vivobook": [(1280, 720), 7],
+    }
     time_format = "%Y-%m-%d_%H-%M-%S"
     filename = f"{datetime.now().strftime(time_format)}"
     rec = Recorder(
-        sizex=640,
-        sizey=480,
-        fps=30,
+        sizex=machine_map[machine][0][0],
+        sizey=machine_map[machine][0][1],
+        fps=machine_map[machine][1],
         name=filename,
-        camindex=2,
-        fourcc="YV12",
-        input_device="1,1",
+        # camindex=2,
+        # fourcc="YV12",
+        # input_device="1,1",
     )
     rec.start()
     time.sleep(30)
