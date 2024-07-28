@@ -274,7 +274,7 @@ if __name__ == "__main__":
             # fourcc="YV12",
             # input_device="1,1",
         )
-        new_thread = threading.Thread(target=rec.start_cmd)
+        new_thread = threading.Thread(target=rec.start)
         new_thread.start()
         time.sleep(time_limit)
         print(f"Done {filename}")
