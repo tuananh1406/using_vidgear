@@ -196,14 +196,14 @@ class Recorder:
             time.sleep(1)
 
         # Merging audio and video signal
-        if (
-            abs(recorded_fps - self.fps) >= 3.0
-        ):  # If the fps rate was higher/lower than expected, re-encode it to the expected
-            cmd = f"ffmpeg -y -r {recorded_fps} -i {self.video_filename} -input_format {self.fourcc.lower()} -pix_fmt yuvj420p -r {self.fps} {self.video_filename}"
-            if os.path.exists(self.video_filename):
-                self.call_cmd(cmd)
-            else:
-                print("Video file was not found")
+        # if (
+        #     abs(recorded_fps - self.fps) >= 3.0
+        # ):  # If the fps rate was higher/lower than expected, re-encode it to the expected
+        #     cmd = f"ffmpeg -y -r {recorded_fps} -i {self.video_filename} -input_format {self.fourcc.lower()} -pix_fmt yuvj420p -r {self.fps} {self.video_filename}"
+        #     if os.path.exists(self.video_filename):
+        #         self.call_cmd(cmd)
+        #     else:
+        #         print("Video file was not found")
         cmd = f"ffmpeg -y -ac 2 -channel_layout stereo -i {self.audio_filename} -i {self.video_filename} -input_format {self.fourcc.lower()} -pix_fmt yuvj420p {self.out_filename}"
         if os.path.exists(self.video_filename):
             self.call_cmd(cmd)
