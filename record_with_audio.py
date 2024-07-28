@@ -182,6 +182,7 @@ class Recorder:
             if time.time() - now > self.time_limit:
                 self.stop_AVrecording()
                 break
+        # self.clean()
 
     def write_images_to_video(self, recorded_fps):
         video_out = cv2.VideoWriter(
@@ -227,7 +228,6 @@ class Recorder:
             self.call_cmd(cmd)
         else:
             print("Video file was not found")
-        self.clean()
 
     def ffmpeg_record_video(self):
         cmd = f"ffmpeg -f v4l2 -input_format mjpeg -framerate {self.fps} -video_size {self.frame_size[0]}x{self.frame_size[1]} -i /dev/video{self.cam_index} -c:v libx264 -vf format=yuvj420p -t {self.time_limit} {self.video_filename}"
