@@ -189,14 +189,14 @@ class Recorder:
 
         # Merging audio and video signal
         if (
-            abs(recorded_fps - self.fps) >= 5.0
+            abs(recorded_fps - self.fps) >= 3.0
         ):  # If the fps rate was higher/lower than expected, re-encode it to the expected
-            cmd = f"ffmpeg -y -r {recorded_fps} -i {self.video_filename} -input_format {self.fourcc.lower()} -pix_fmt yuv420p -r {self.fps} {self.video_filename}"
+            cmd = f"ffmpeg -y -r {recorded_fps} -i {self.video_filename} -input_format {self.fourcc.lower()} -pix_fmt yuvj420p -r {self.fps} {self.video_filename}"
             if os.path.exists(self.video_filename):
                 self.call_cmd(cmd)
             else:
                 print("Video file was not found")
-        cmd = f"ffmpeg -y -ac 2 -channel_layout stereo -i {self.audio_filename} -i {self.video_filename} -input_format {self.fourcc.lower()} -pix_fmt yuv420p {self.out_filename}"
+        cmd = f"ffmpeg -y -ac 2 -channel_layout stereo -i {self.audio_filename} -i {self.video_filename} -input_format {self.fourcc.lower()} -pix_fmt yuvj420p {self.out_filename}"
         if os.path.exists(self.video_filename):
             self.call_cmd(cmd)
         else:
@@ -204,7 +204,7 @@ class Recorder:
         # self.clean()
 
     def ffmpeg_record_video(self):
-        cmd = f"ffmpeg -f v4l2 -input_format mjpeg -framerate {self.fps} -video_size {self.frame_size[0]}x{self.frame_size[1]} -i /dev/video{self.cam_index} -c:v libx264 -vf format=yuv420p -t {self.time_limit} {self.video_filename}"
+        cmd = f"ffmpeg -f v4l2 -input_format mjpeg -framerate {self.fps} -video_size {self.frame_size[0]}x{self.frame_size[1]} -i /dev/video{self.cam_index} -c:v libx264 -vf format=yuvj420p -t {self.time_limit} {self.video_filename}"
         self.call_cmd(cmd)
 
     def arecord_record_audio(self):
@@ -219,7 +219,7 @@ class Recorder:
         while self.video_thread.is_alive() or self.audio_thread.is_alive():
             time.sleep(1)
 
-        cmd = f"ffmpeg -y -ac 2 -channel_layout stereo -i {self.audio_filename} -i {self.video_filename} -input_format {self.fourcc.lower()} -pix_fmt yuv420p {self.out_filename}"
+        cmd = f"ffmpeg -y -ac 2 -channel_layout stereo -i {self.audio_filename} -i {self.video_filename} -input_format {self.fourcc.lower()} -pix_fmt yuvj420p {self.out_filename}"
         if os.path.exists(self.video_filename):
             self.call_cmd(cmd)
         else:
