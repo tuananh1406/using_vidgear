@@ -82,12 +82,8 @@ class Recorder:
         #     else device_info["maxInputChannels"]
         # )
 
-    def record_video(self):
+    def record_video(self, video_cap):
         "Video starts being recorded"
-        video_cap = cv2.VideoCapture(self.cam_index)
-        video_cap.set(cv2.CAP_PROP_FOURCC, self.video_writer_fourcc)
-        video_cap.set(3, self.frame_size[0])
-        video_cap.set(4, self.frame_size[1])
         video_out = cv2.VideoWriter(
             self.video_filename, self.video_writer_fourcc, self.fps, self.frame_size
         )
@@ -163,7 +159,19 @@ class Recorder:
         "Launches the video recording function using a thread"
         print("Recording")
         now = time.time()
-        self.video_thread = threading.Thread(target=self.record_video)
+        video_cap = cv2.VideoCapture(self.cam_index)
+        while not video_cap.isOpened():
+            print("Wait for the camera")
+            time.sleep(0.1)
+            video_cap = cv2.VideoCapture(self.cam_index)
+            if video_cap.isOpened():
+                break
+        video_cap.set(cv2.CAP_PROP_FOURCC, self.video_writer_fourcc)
+        video_cap.set(3, self.frame_size[0])
+        video_cap.set(4, self.frame_size[1])
+        self.video_thread = threading.Thread(
+            target=self.record_video, args=(video_cap,)
+        )
         self.video_thread.start()
 
         "Launches the audio recording function using a thread"
