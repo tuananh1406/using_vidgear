@@ -266,7 +266,8 @@ class Recorder:
 
     def call_cmd(self, cmd):
         # subprocess.Popen(cmd.split())
-        subprocess.run(cmd.split(), shell=True, check=True, text=True)
+        # subprocess.run(cmd.split(), shell=True, check=True, text=True)
+        subprocess.call(cmd, shell=True)
 
     def clean(self):
         if os.path.exists(self.video_filename):
