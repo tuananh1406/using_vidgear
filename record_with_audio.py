@@ -209,7 +209,7 @@ class Recorder:
         # self.clean()
 
     def call_cmd(self, cmd):
-        subprocess.call(cmd, shell=False)
+        subprocess.call(cmd, shell=True)
 
     def clean(self):
         if os.path.exists(self.video_filename):
