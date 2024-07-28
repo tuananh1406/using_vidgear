@@ -61,6 +61,7 @@ class Recorder:
             sizex,
             sizey,
         )  # video formats and sizes also depend and vary according to the camera used
+        self.image_folder = f"raw_images/{name}"
         self.video_filename = os.path.join("raw_videos", f"{name}.avi")
         self.video_reencode_filename = os.path.join(
             "raw_videos", f"{name}_reencode.avi"
@@ -90,9 +91,8 @@ class Recorder:
         self.start_time = time.time()
 
         font = cv2.FONT_HERSHEY_SIMPLEX
-        image_folder = f"raw_images/{self.name}"
-        if not os.path.exists(image_folder):
-            os.makedirs(image_folder)
+        if not os.path.exists(self.image_folder):
+            os.makedirs(self.image_folder)
         # counter = 1
         prev_frame_time = 0
         while self.open:
@@ -113,7 +113,7 @@ class Recorder:
                     3,
                     cv2.LINE_AA,
                 )
-                cv2.imwrite(f"{image_folder}/{self.frame_counts}.jpg", video_frame)
+                cv2.imwrite(f"{self.image_folder}/{self.frame_counts}.jpg", video_frame)
                 self.frame_counts += 1
 
                 # cv2.imshow('video_frame', gray)
@@ -184,12 +184,11 @@ class Recorder:
                 break
 
     def write_images_to_video(self, recorded_fps):
-        image_folder = f"raw_images/{self.name}"
         video_out = cv2.VideoWriter(
             self.video_filename, self.video_writer_fourcc, recorded_fps, self.frame_size
         )
         for i in range(self.frame_counts):
-            img_path = f"{image_folder}/{i}.jpg"
+            img_path = f"{self.image_folder}/{i}.jpg"
             if os.path.exists(img_path):
                 img = cv2.imread(img_path)
                 video_out.write(img)
