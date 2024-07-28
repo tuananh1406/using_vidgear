@@ -62,10 +62,13 @@ class Recorder:
             sizey,
         )  # video formats and sizes also depend and vary according to the camera used
         self.video_filename = os.path.join("raw_videos", f"{name}.avi")
+        self.video_reencode_filename = os.path.join(
+            "raw_videos", f"{name}_reencode.avi"
+        )
         self.audio_filename = os.path.join("raw_audios", f"{name}.wav")
         self.out_filename = os.path.join("final_videos", f"{name}.mp4")
         self.video_writer_fourcc = cv2.VideoWriter_fourcc(*self.fourcc)
-        self.frame_counts = 1
+        self.frame_counts = 0
         self.start_time = time.time()
         self.open = True
         self.frames_per_buffer = fpb
@@ -84,12 +87,12 @@ class Recorder:
 
     def record_video(self, video_cap):
         "Video starts being recorded"
-        video_out = cv2.VideoWriter(
-            self.video_filename, self.video_writer_fourcc, self.fps, self.frame_size
-        )
         self.start_time = time.time()
 
         font = cv2.FONT_HERSHEY_SIMPLEX
+        image_folder = f"raw_images/{self.name}"
+        if not os.path.exists(image_folder):
+            os.makedirs(image_folder)
         # counter = 1
         prev_frame_time = 0
         while self.open:
@@ -110,16 +113,14 @@ class Recorder:
                     3,
                     cv2.LINE_AA,
                 )
-                video_out.write(video_frame)
+                cv2.imwrite(f"{image_folder}/{self.frame_counts}.jpg", video_frame)
                 self.frame_counts += 1
 
                 # cv2.imshow('video_frame', gray)
                 # cv2.waitKey(1)
             else:
                 break
-        video_out.release()
         video_cap.release()
-        cv2.destroyAllWindows()
 
     def stop(self):
         "Finishes the video recording therefore the thread too"
@@ -182,11 +183,25 @@ class Recorder:
                 self.stop_AVrecording()
                 break
 
+    def write_images_to_video(self, recorded_fps):
+        image_folder = f"raw_images/{self.name}"
+        video_out = cv2.VideoWriter(
+            self.video_filename, self.video_writer_fourcc, recorded_fps, self.frame_size
+        )
+        for i in range(self.frame_counts):
+            img_path = f"{image_folder}/{i}.jpg"
+            if os.path.exists(img_path):
+                img = cv2.imread(img_path)
+                video_out.write(img)
+        video_out.release()
+        cv2.destroyAllWindows
+
     def stop_AVrecording(self):
         self.stop()
         elapsed_time = time.time() - self.start_time
         recorded_fps = self.frame_counts / elapsed_time
         print(f"Recorded fps: {recorded_fps:.2f}")
+        self.write_images_to_video(recorded_fps)
 
         if os.path.exists(self.out_filename):
             os.remove(self.out_filename)
@@ -196,15 +211,19 @@ class Recorder:
             time.sleep(1)
 
         # Merging audio and video signal
-        # if (
-        #     abs(recorded_fps - self.fps) >= 3.0
-        # ):  # If the fps rate was higher/lower than expected, re-encode it to the expected
-        #     cmd = f"ffmpeg -y -r {recorded_fps} -i {self.video_filename} -input_format {self.fourcc.lower()} -pix_fmt yuvj420p -r {self.fps} {self.video_filename}"
-        #     if os.path.exists(self.video_filename):
-        #         self.call_cmd(cmd)
-        #     else:
-        #         print("Video file was not found")
-        cmd = f"ffmpeg -y -ac 2 -channel_layout stereo -i {self.audio_filename} -i {self.video_filename} -input_format {self.fourcc.lower()} -pix_fmt yuvj420p {self.out_filename}"
+        if (
+            abs(recorded_fps - self.fps) >= 1.0
+        ):  # If the fps rate was higher/lower than expected, re-encode it to the expected
+            cmd = f"ffmpeg -y -r {recorded_fps} -i {self.video_filename} -input_format {self.fourcc.lower()} -pix_fmt yuvj420p -r {self.fps} {self.video_reencode_filename}"
+            if os.path.exists(self.video_filename):
+                self.call_cmd(cmd)
+            else:
+                print("Video file was not found")
+        if os.path.exists(self.video_reencode_filename):
+            input_video = self.video_reencode_filename
+        else:
+            input_video = self.video_filename
+        cmd = f"ffmpeg -y -ac 2 -channel_layout stereo -i {self.audio_filename} -i {input_video} -input_format {self.fourcc.lower()} -pix_fmt yuvj420p {self.out_filename}"
         if os.path.exists(self.video_filename):
             self.call_cmd(cmd)
         else:
@@ -263,6 +282,8 @@ if __name__ == "__main__":
         os.makedirs("raw_audios")
     if not os.path.exists("final_videos"):
         os.makedirs("final_videos")
+    if not os.path.exists("raw_images"):
+        os.makedirs("raw_images")
     machine = sys.argv[1]
     machine_map = {
         "pc-lan": [(1280, 720), 30],
