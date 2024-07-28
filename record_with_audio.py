@@ -49,6 +49,7 @@ class Recorder:
         fpb=1024,
         channels=2,
         input_device="default",
+        time_limit=10,
     ):
         self.open = True
         self.device_index = camindex
@@ -73,6 +74,7 @@ class Recorder:
         # self.input_device_index = device_info["index"]
         self.rate = rate
         self.channels = channels
+        self.time_limit = time_limit
         # self.rate = int(device_info["defaultSampleRate"])
         # self.channels = (
         #     channels
@@ -138,10 +140,6 @@ class Recorder:
                 print(f"An exception occurred: {e}")
             if not self.open:
                 break
-
-    def record_by_ffmpeg(self):
-        cmd = f"ffmpeg -f v4l2 -input_format {self.fourcc.lower()} -framerate {self.fps} -video_size {self.frame_size[0]}x{self.frame_size[1]} -i /dev/video{self.camindex} -c:v libx264 -vf format=yuv420p {self.video_filename}"
-        self.call_cmd(cmd)
 
     def record_audio_stream(self):
         with wave.open(self.audio_filename, "wb") as waveFile:
@@ -216,6 +214,41 @@ class Recorder:
             print("Video file was not found")
         # self.clean()
 
+    def ffmpeg_record_video(self):
+        cmd = f"ffmpeg -f v4l2 -input_format {self.fourcc.lower()} -framerate {self.fps} -video_size {self.frame_size[0]}x{self.frame_size[1]} -i /dev/video{self.camindex} -c:v libx264 -vf format=yuv420p -t {self.time_limit} {self.video_filename}"
+        self.call_cmd(cmd)
+
+    def arecord_record_audio(self):
+        cmd = f"arecord -f S16_LE -r {self.rate} -d {self.time_limit} {self.audio_filename}"
+        self.call_cmd(cmd)
+
+    def stop_cmd(self):
+        if os.path.exists(self.out_filename):
+            os.remove(self.out_filename)
+
+        # Makes sure the threads have finished
+        while self.video_thread.is_alive() or self.audio_thread.is_alive():
+            time.sleep(1)
+
+        cmd = f"ffmpeg -y -ac 2 -channel_layout stereo -i {self.audio_filename} -i {self.video_filename} -input_format {self.fourcc.lower()} -pix_fmt yuv420p {self.out_filename}"
+        if os.path.exists(self.video_filename):
+            self.call_cmd(cmd)
+        else:
+            print("Video file was not found")
+
+    def start_cmd(self):
+        print("Recording using command")
+        now = time.time()
+        self.video_thread = threading.Thread(target=self.ffmpeg_record_video)
+        self.video_thread.start()
+
+        self.audio_thread = threading.Thread(target=self.arecord_record_audio)
+        self.audio_thread.start()
+        while True:
+            if time.time() - now > time_limit:
+                self.stop_cmd()
+                break
+
     def call_cmd(self, cmd):
         subprocess.Popen(cmd.split())
 
@@ -247,13 +280,12 @@ if __name__ == "__main__":
             sizey=machine_map[machine][0][1],
             fps=machine_map[machine][1],
             name=filename,
+            time_limit=time_limit,
             # camindex=2,
             # fourcc="YV12",
             # input_device="1,1",
         )
-        new_thread = threading.Thread(target=rec.start, args=(time_limit,))
+        new_thread = threading.Thread(target=rec.start_cmd)
         new_thread.start()
         time.sleep(time_limit)
-        # time.sleep(30)
-        # rec.stop_AVrecording()
         print(f"Done {filename}")
