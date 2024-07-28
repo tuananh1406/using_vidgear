@@ -20,7 +20,6 @@ def get_audio_device_info_by_name(name="1,0"):
         dev = p.get_device_info_by_index(i)
         if name in dev["name"]:
             device_info = dev
-            print(device_info)
     p.terminate()
     return device_info
 
@@ -33,7 +32,6 @@ def get_audio_device_id_and_rate(name="1,0"):
         if name in dev["name"]:
             device_id = i
             rate = int(dev["defaultSampleRate"])
-            print(device_id, dev["name"])
     p.terminate()
     return device_id, rate
 
@@ -211,7 +209,7 @@ class Recorder:
         # self.clean()
 
     def call_cmd(self, cmd):
-        subprocess.call(cmd, shell=True)
+        subprocess.call(cmd, shell=False)
 
     def clean(self):
         if os.path.exists(self.video_filename):
