@@ -69,15 +69,16 @@ class Recorder:
         self.open = True
         self.frames_per_buffer = fpb
         self.format = pyaudio.paInt16
-        device_info = get_audio_device_info_by_name(input_device)
-        self.input_device_index = device_info["index"]
+        # device_info = get_audio_device_info_by_name(input_device)
+        # self.input_device_index = device_info["index"]
         self.rate = rate
+        self.channels = channels
         # self.rate = int(device_info["defaultSampleRate"])
-        self.channels = (
-            channels
-            if channels <= device_info["maxInputChannels"]
-            else device_info["maxInputChannels"]
-        )
+        # self.channels = (
+        #     channels
+        #     if channels <= device_info["maxInputChannels"]
+        #     else device_info["maxInputChannels"]
+        # )
 
     def record_video(self):
         "Video starts being recorded"
@@ -151,7 +152,7 @@ class Recorder:
                 rate=self.rate,
                 input=True,
                 frames_per_buffer=self.frames_per_buffer,
-                input_device_index=self.input_device_index,
+                # input_device_index=self.input_device_index,
             )
 
             waveFile.setnchannels(self.channels)
