@@ -170,14 +170,19 @@ class Recorder:
             stream.close()
             audio.terminate()
 
-    def start(self):
+    def start(self, time_limit=10):
         "Launches the video recording function using a thread"
+        now = time.time()
         self.video_thread = threading.Thread(target=self.record_video)
         self.video_thread.start()
 
         "Launches the audio recording function using a thread"
         self.audio_thread = threading.Thread(target=self.record_audio_stream)
         self.audio_thread.start()
+        while True:
+            if time.time() - now > time_limit:
+                self.stop_AVrecording()
+                break
 
     def stop_AVrecording(self):
         self.stop()
@@ -241,7 +246,7 @@ if __name__ == "__main__":
         # fourcc="YV12",
         # input_device="1,1",
     )
-    rec.start()
-    time.sleep(30)
-    rec.stop_AVrecording()
+    rec.start(30)
+    # time.sleep(30)
+    # rec.stop_AVrecording()
     print("Done")
