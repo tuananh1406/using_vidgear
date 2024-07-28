@@ -272,6 +272,12 @@ class Recorder:
             os.remove(self.video_filename)
         if os.path.exists(self.audio_filename):
             os.remove(self.audio_filename)
+        if os.path.exists(self.video_reencode_filename):
+            os.remove(self.video_reencode_filename)
+        if os.path.exists(self.image_folder):
+            for file in os.listdir(self.image_folder):
+                os.remove(os.path.join(self.image_folder, file))
+            os.rmdir(self.image_folder)
 
 
 if __name__ == "__main__":
