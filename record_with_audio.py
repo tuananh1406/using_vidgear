@@ -182,7 +182,7 @@ class Recorder:
             if time.time() - now > self.time_limit:
                 self.stop_AVrecording()
                 break
-        # self.clean()
+        self.clean()
 
     def write_images_to_video(self, recorded_fps):
         video_out = cv2.VideoWriter(
