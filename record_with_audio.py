@@ -236,17 +236,21 @@ if __name__ == "__main__":
         "vivobook": [(1280, 720), 7],
     }
     time_format = "%Y-%m-%d_%H-%M-%S"
-    filename = f"{datetime.now().strftime(time_format)}"
-    rec = Recorder(
-        sizex=machine_map[machine][0][0],
-        sizey=machine_map[machine][0][1],
-        fps=machine_map[machine][1],
-        name=filename,
-        # camindex=2,
-        # fourcc="YV12",
-        # input_device="1,1",
-    )
-    rec.start(30)
-    # time.sleep(30)
-    # rec.stop_AVrecording()
-    print("Done")
+    time_limit = 30
+    while True:
+        filename = f"{datetime.now().strftime(time_format)}"
+        rec = Recorder(
+            sizex=machine_map[machine][0][0],
+            sizey=machine_map[machine][0][1],
+            fps=machine_map[machine][1],
+            name=filename,
+            # camindex=2,
+            # fourcc="YV12",
+            # input_device="1,1",
+        )
+        new_thread = threading.Thread(target=rec.start, args=(time_limit,))
+        new_thread.start()
+        time.sleep(time_limit)
+        # time.sleep(30)
+        # rec.stop_AVrecording()
+        print(f"Done {filename}")
