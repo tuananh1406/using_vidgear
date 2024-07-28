@@ -43,7 +43,7 @@ class Recorder:
         fourcc="MJPG",
         sizex=1280,
         sizey=720,
-        camindex=0,
+        cam_index=0,
         fps=7,
         rate=44100,
         fpb=1024,
@@ -52,7 +52,7 @@ class Recorder:
         time_limit=10,
     ):
         self.open = True
-        self.device_index = camindex
+        self.cam_index = cam_index
         self.fps = (
             fps  # fps should be the minimum constant rate at which the camera can
         )
@@ -84,7 +84,7 @@ class Recorder:
 
     def record_video(self):
         "Video starts being recorded"
-        video_cap = cv2.VideoCapture(self.device_index)
+        video_cap = cv2.VideoCapture(self.cam_index)
         video_cap.set(cv2.CAP_PROP_FOURCC, self.video_writer_fourcc)
         video_cap.set(3, self.frame_size[0])
         video_cap.set(4, self.frame_size[1])
@@ -215,7 +215,7 @@ class Recorder:
         # self.clean()
 
     def ffmpeg_record_video(self):
-        cmd = f"ffmpeg -f v4l2 -input_format {self.fourcc.lower()} -framerate {self.fps} -video_size {self.frame_size[0]}x{self.frame_size[1]} -i /dev/video{self.camindex} -c:v libx264 -vf format=yuv420p -t {self.time_limit} {self.video_filename}"
+        cmd = f"ffmpeg -f v4l2 -input_format {self.fourcc.lower()} -framerate {self.fps} -video_size {self.frame_size[0]}x{self.frame_size[1]} -i /dev/video{self.cam_index} -c:v libx264 -vf format=yuv420p -t {self.time_limit} {self.video_filename}"
         self.call_cmd(cmd)
 
     def arecord_record_audio(self):
@@ -281,7 +281,7 @@ if __name__ == "__main__":
             fps=machine_map[machine][1],
             name=filename,
             time_limit=time_limit,
-            # camindex=2,
+            # cam_index=2,
             # fourcc="YV12",
             # input_device="1,1",
         )
