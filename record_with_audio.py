@@ -40,7 +40,7 @@ class Recorder:
     def __init__(
         self,
         name="video",
-        fourcc="MJPEG",
+        fourcc="MJPG",
         sizex=1280,
         sizey=720,
         cam_index=0,
@@ -215,7 +215,7 @@ class Recorder:
         # self.clean()
 
     def ffmpeg_record_video(self):
-        cmd = f"ffmpeg -f v4l2 -input_format {self.fourcc.lower()} -framerate {self.fps} -video_size {self.frame_size[0]}x{self.frame_size[1]} -i /dev/video{self.cam_index} -c:v libx264 -vf format=yuv420p -t {self.time_limit} {self.video_filename}"
+        cmd = f"ffmpeg -f v4l2 -input_format mjpeg -framerate {self.fps} -video_size {self.frame_size[0]}x{self.frame_size[1]} -i /dev/video{self.cam_index} -c:v libx264 -vf format=yuv420p -t {self.time_limit} {self.video_filename}"
         self.call_cmd(cmd)
 
     def arecord_record_audio(self):
