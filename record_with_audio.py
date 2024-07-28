@@ -271,16 +271,12 @@ class Recorder:
 
     def clean(self):
         if os.path.exists(self.video_filename):
-            print("Removing video file")
             os.remove(self.video_filename)
         if os.path.exists(self.audio_filename):
-            print("Removing audio file")
             os.remove(self.audio_filename)
         if os.path.exists(self.video_reencode_filename):
-            print("Removing reencode video file")
             os.remove(self.video_reencode_filename)
         if os.path.exists(self.image_folder):
-            print("Removing image folder")
             for file in os.listdir(self.image_folder):
                 os.remove(os.path.join(self.image_folder, file))
             os.rmdir(self.image_folder)
@@ -302,7 +298,7 @@ if __name__ == "__main__":
         "vivobook": [(1280, 720), 30],
     }
     time_format = "%Y-%m-%d_%H-%M-%S"
-    time_limit = 10
+    time_limit = 60
     while True:
         filename = f"{datetime.now().strftime(time_format)}"
         rec = Recorder(
