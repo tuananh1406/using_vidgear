@@ -196,7 +196,7 @@ class Recorder:
             os.remove(self.out_filename)
 
         # Makes sure the threads have finished
-        while threading.active_count() > 1:
+        while self.video_thread.is_alive() or self.audio_thread.is_alive():
             time.sleep(1)
 
         # Merging audio and video signal
@@ -216,8 +216,7 @@ class Recorder:
         # self.clean()
 
     def call_cmd(self, cmd):
-        # subprocess.call(cmd, shell=True)
-        subprocess.run(cmd.split(), check=True, text=True)
+        subprocess.Popen(cmd.split())
 
     def clean(self):
         if os.path.exists(self.video_filename):
