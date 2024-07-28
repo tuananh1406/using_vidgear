@@ -71,7 +71,8 @@ class Recorder:
         self.format = pyaudio.paInt16
         device_info = get_audio_device_info_by_name(input_device)
         self.input_device_index = device_info["index"]
-        self.rate = int(device_info["defaultSampleRate"])
+        self.rate = rate
+        # self.rate = int(device_info["defaultSampleRate"])
         self.channels = (
             channels
             if channels <= device_info["maxInputChannels"]
@@ -172,6 +173,7 @@ class Recorder:
 
     def start(self, time_limit=10):
         "Launches the video recording function using a thread"
+        print("Recording")
         now = time.time()
         self.video_thread = threading.Thread(target=self.record_video)
         self.video_thread.start()
