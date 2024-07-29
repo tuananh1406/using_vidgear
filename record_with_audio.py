@@ -50,6 +50,7 @@ class Recorder:
         channels=2,
         # input_device="default",
         time_limit=10,
+        machine="vivobook",
     ):
         self.open = True
         self.cam_index = cam_index
@@ -74,6 +75,7 @@ class Recorder:
         self.open = True
         self.frames_per_buffer = fpb
         self.format = pyaudio.paInt16
+        self.machine = machine
         # device_info = get_audio_device_info_by_name(input_device)
         # self.input_device_index = device_info["index"]
         self.rate = rate
@@ -250,6 +252,7 @@ class Recorder:
             self.call_cmd(cmd)
         else:
             print("Video file was not found")
+        cmd = f"rclone copy {self.out_filename} od_dev:Videos/{self.machine}/{datetime.now().strftime('%d-%m-%Y')}"
 
     def start_cmd(self):
         print("Recording using command")
@@ -280,6 +283,8 @@ class Recorder:
             for file in os.listdir(self.image_folder):
                 os.remove(os.path.join(self.image_folder, file))
             os.rmdir(self.image_folder)
+        if os.path.exists(self.out_filename):
+            os.remove(self.out_filename)
 
 
 if __name__ == "__main__":
@@ -310,6 +315,7 @@ if __name__ == "__main__":
             # cam_index=2,
             # fourcc="YV12",
             # input_device="1,1",
+            machine=machine,
         )
         new_thread = threading.Thread(target=rec.start)
         new_thread.start()
