@@ -106,7 +106,7 @@ class Recorder:
                 cv2.putText(
                     video_frame,
                     f"{self.frame_size[0]}x{self.frame_size[1]} - {fps}",
-                    (1, 20),
+                    (1, 40),
                     font,
                     1,
                     (100, 255, 0),
@@ -294,8 +294,8 @@ if __name__ == "__main__":
     machine = sys.argv[1]
     machine_map = {
         "pc-lan": [(640, 480), 30],
-        # "vivobook": [(640, 480), 30],
-        "vivobook": [(1280, 720), 30],
+        "vivobook": [(640, 480), 30],
+        # "vivobook": [(1280, 720), 30],
     }
     time_format = "%Y-%m-%d_%H-%M-%S"
     time_limit = 60
