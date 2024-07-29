@@ -252,7 +252,7 @@ class Recorder:
             self.call_cmd(cmd)
         else:
             print("Video file was not found")
-        cmd = f"rclone copy {self.out_filename} od_dev:Videos/{self.machine}/{datetime.now().strftime('%d-%m-%Y')}"
+        cmd = f"rclone copy {self.out_filename} od_dev:Videos/{self.machine}/{datetime.now().strftime('%d-%m-%Y')} -P"
         self.call_cmd(cmd)
 
     def start_cmd(self):
