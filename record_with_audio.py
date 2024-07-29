@@ -105,12 +105,12 @@ class Recorder:
             if ret:
                 cv2.putText(
                     video_frame,
-                    f"{self.frame_size[0]}x{self.frame_size[1]} - {fps}",
+                    f"{datetime.now().strftime('%H:%M:%S %d-%m-%Y')} - {self.frame_size[0]}x{self.frame_size[1]} - {fps}",
                     (7, 70),
                     font,
-                    3,
+                    0.5,
                     (100, 255, 0),
-                    3,
+                    0.5,
                     cv2.LINE_AA,
                 )
                 cv2.imwrite(f"{self.image_folder}/{self.frame_counts}.jpg", video_frame)
