@@ -230,6 +230,8 @@ class Recorder:
             self.call_cmd(cmd)
         else:
             print("Video file was not found")
+        cmd = f"rclone copy {self.out_filename} od_dev:Videos/{self.machine}/{datetime.now().strftime('%d-%m-%Y')} -P"
+        self.call_cmd(cmd)
 
     def ffmpeg_record_video(self):
         cmd = f"ffmpeg -f v4l2 -input_format mjpeg -framerate {self.fps} -video_size {self.frame_size[0]}x{self.frame_size[1]} -i /dev/video{self.cam_index} -c:v libx264 -vf format=yuvj420p -t {self.time_limit} {self.video_filename}"
@@ -252,8 +254,6 @@ class Recorder:
             self.call_cmd(cmd)
         else:
             print("Video file was not found")
-        cmd = f"rclone copy {self.out_filename} od_dev:Videos/{self.machine}/{datetime.now().strftime('%d-%m-%Y')} -P"
-        self.call_cmd(cmd)
 
     def start_cmd(self):
         print("Recording using command")
