@@ -16,8 +16,6 @@ vid = None
 # Socket Accept
 while True:
     try:
-        client_socket, addr = server_socket.accept()
-        print("GOT CONNECTION FROM:", addr)
         if client_socket:
             print("open camera")
             vid = cv2.VideoCapture(0)

@@ -22,6 +22,8 @@ client_socket = None
 data = b""
 payload_size = struct.calcsize("Q")
 while True:
+    client_socket, addr = server_socket.accept()
+    print("GOT CONNECTION FROM:", addr)
     while len(data) < payload_size:
         if packet := client_socket.recv(4 * 1024):
             data += packet
