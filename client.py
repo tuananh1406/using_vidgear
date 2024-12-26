@@ -6,18 +6,18 @@ import cv2
 
 # create socket
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-host_ip = "192.168.2.195"  # paste your server ip address here
-# host_ip = "192.168.3.45"  # paste your server ip address here
+# host_ip = "192.168.2.195"  # paste your server ip address here
+host_ip = "192.168.3.45"  # paste your server ip address here
 port = 9999
 client_socket.connect((host_ip, port))  # a tuple
 data = b""
 payload_size = struct.calcsize("Q")
 while True:
     while len(data) < payload_size:
-        packet = client_socket.recv(4 * 1024)  # 4K
-        if not packet:
+        if packet := client_socket.recv(4 * 1024):
+            data += packet
+        else:
             break
-        data += packet
     packed_msg_size = data[:payload_size]
     data = data[payload_size:]
     msg_size = struct.unpack("Q", packed_msg_size)[0]
