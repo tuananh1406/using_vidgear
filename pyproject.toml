@@ -7,4 +7,10 @@ requires-python = ">=3.11"
 dependencies = [
     "opencv-python>=4.10.0.84",
     "pyvirtualcam>=0.12.0",
+    "tomlscript>=0.2.1",
 ]
+[tool.tomlscript]
+run_server = "uv run python server.py"
+run_client = "uv run python client.py"
+get_ipaddress = "ifconfig | grep '192.168'"
+install_dlc = "bash install_dlc.sh"
