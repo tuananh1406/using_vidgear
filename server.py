@@ -7,7 +7,7 @@ import struct
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 host_name = socket.gethostname()
 # host_ip = socket.gethostbyname(host_name)
-host_ip = "192.168.3.40"
+host_ip = "192.168.3.57"
 print("HOST IP:", host_ip)
 port = 9999
 socket_address = (host_ip, port)
